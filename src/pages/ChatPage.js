@@ -1,24 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { TextField, Button, List, ListItem, Paper, Typography, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import sendMessageToOpenAI from '../api/api';
 
 const ChatPage = () => {
+  const { chatId } = useParams();
+  const navigate = useNavigate();
+
   const [messages, setMessages] = useState(() => {
-    const savedMessages = localStorage.getItem('chatMessages');
-    return savedMessages ? JSON.parse(savedMessages) : [];
+    const savedChats = JSON.parse(localStorage.getItem('chats')) || {};
+    return savedChats[chatId]?.messages || [];
   });
+
   const [input, setInput] = useState('');
   const [open, setOpen] = useState(false);
+  const [isEnded, setIsEnded] = useState(false); // Add state to track if the chat has ended
   const bottomRef = useRef(null);
+
+  // Load messages and status from localStorage on mount
+  useEffect(() => {
+    const savedChats = JSON.parse(localStorage.getItem('chats')) || {};
+    if (savedChats[chatId]) {
+      setMessages(savedChats[chatId].messages);
+      setIsEnded(savedChats[chatId].status === 'ended'); // Set the ended status
+    }
+  }, [chatId]);
 
   // Save messages to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('chatMessages', JSON.stringify(messages));
+    const savedChats = JSON.parse(localStorage.getItem('chats')) || {};
+    savedChats[chatId] = { messages, status: isEnded ? 'ended' : 'active' };
+    localStorage.setItem('chats', JSON.stringify(savedChats));
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, chatId, isEnded]);
 
   const handleSend = async () => {
-    if (input.trim()) {
+    if (input.trim() && !isEnded) {
       const newMessage = { text: input, sender: 'user' };
       setInput('');
       const updatedMessages = [...messages, newMessage];
@@ -39,13 +56,21 @@ const ChatPage = () => {
   };
 
   const handleConfirmTerminate = () => {
-    setMessages([]);
-    localStorage.removeItem('chatMessages');
+    const savedChats = JSON.parse(localStorage.getItem('chats')) || {};
+    if (savedChats[chatId]) {
+      savedChats[chatId].status = 'ended';
+      localStorage.setItem('chats', JSON.stringify(savedChats));
+      setIsEnded(true);
+    }
     setOpen(false);
   };
 
   const handleCancelTerminate = () => {
     setOpen(false);
+  };
+
+  const handleBackToHome = () => {
+    navigate('/');
   };
 
   return (
@@ -72,6 +97,7 @@ const ChatPage = () => {
         placeholder="Type your message..."
         className="chat-input"
         fullWidth
+        disabled={isEnded} // Disable input if chat has ended
         onKeyPress={(e) => {
           if (e.key === 'Enter') {
             handleSend();
@@ -83,6 +109,7 @@ const ChatPage = () => {
         color="primary" 
         onClick={handleSend} 
         className="send-button"
+        disabled={isEnded} // Disable button if chat has ended
       >
         Send
       </Button>
@@ -93,6 +120,13 @@ const ChatPage = () => {
         className="send-button"
       >
         End Chat
+      </Button>
+      <Button 
+        variant="contained" 
+        onClick={handleBackToHome} 
+        className="send-button"
+      >
+        Back to Home
       </Button>
       <Dialog open={open} onClose={handleCancelTerminate}>
         <DialogTitle>End Chat</DialogTitle>
