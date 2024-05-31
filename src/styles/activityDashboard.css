@@ -1,0 +1,55 @@
+/* activityDashboard.css */
+
+.dashboard-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #f7f9fc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .dashboard-header h4 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .dashboard-header button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .dashboard-header button:hover {
+    background-color: #0056b3;
+  }
+  
+  .metric-selector {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .metric-selector .MuiFormControl-root {
+    flex-grow: 1;
+  }
+  
+  .chart-container {
+    width: 100%;
+    height: 400px;
+    margin-top: 20px;
+  }
+  

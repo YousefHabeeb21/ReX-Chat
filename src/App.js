@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import LandingPage from './pages/LandingPage';
 import ChatPage from './pages/ChatPage';
+import ActivityDashboard from './components/ActivityDashboard';  // Import the dashboard component
 
 const theme = createTheme({
   palette: {
@@ -19,6 +20,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/chat/:chatId" element={<ChatPage />} />
+          <Route path="/dashboard" element={<ActivityDashboard />} />  // Add a route for the dashboard
         </Routes>
       </Router>
     </ThemeProvider>

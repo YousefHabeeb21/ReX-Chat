@@ -8,6 +8,8 @@ const sendMessageToOpenAI = async (messages) => {
     content: message.text
   }));
 
+
+
   try {
     const response = await axios.post(
       'https://api.openai.com/v1/chat/completions',

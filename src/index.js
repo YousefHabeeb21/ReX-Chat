@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import './styles/chatPage.css';
 import './styles/landingPage.css';
+import './styles/activityDashboard.css';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
